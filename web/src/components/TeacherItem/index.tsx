@@ -3,34 +3,57 @@ import React from 'react';
 import whatsAppIcon from '../../assets/images/icons/whatsapp.svg';
 
 import './styles.css';
+import api from '../../services/api';
 
-function TeacherItem() {
+export interface Teacher {
+  id: number;
+  avatar: string;
+  bio: string;
+  cost: number;
+  name: string;
+  subject: string;
+  whatsapp: string;
+}
+
+interface TeacherItemProps {
+  teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+  function createNewConnection() {
+    api.post('connections', {
+      user_id: teacher.id
+    });
+  }
+
   return (
     <article className="teacher-item">
       <header>
-        <img 
-          src="https://avatars3.githubusercontent.com/u/32594965?s=460&u=efe5a16210111c4e14f0884574a43c40a2866468&v=4" 
-          alt="Igor Martinez" 
+        <img
+          src={teacher.avatar}
+          alt={teacher.name}
         />
         <div>
-          <strong>Igor Martinez</strong>
-          <span>League of Legends</span>
+          <strong>{teacher.name}</strong>
+          <span>{teacher.subject}</span>
         </div>
       </header>
-      <p>
-        Doggo ipsum sub woofer snoot very jealous pupper, puggorino.
-            <br /><br />
-            Tungg the neighborhood pupper ruff doggo he made.
-          </p>
+
+      <p>{teacher.bio}</p>
+
       <footer>
         <p>
           Preço/hora
-              <strong>R$ 80,00</strong>
+          <strong>R$ {teacher.cost}</strong>
         </p>
-        <button>
+        <a 
+          onClick={createNewConnection} 
+          href={`https://wa.me/${teacher.whatsapp}`} 
+          target="_blank"
+        >
           <img src={whatsAppIcon} alt="Whatsapp" />
-              Entrar em contato
-            </button>
+          Entrar em contato
+        </a>
       </footer>
     </article>
   );
